@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { collection, addDoc, query, where, onSnapshot, updateDoc, doc } from "firebase/firestore";
-import { useAuth } from "../context/AuthContext";
-import Sidebar from "../components/SideBar";
+import { useAuth } from "../context/AuthContext.jsx";
+import Sidebar from "../components/SideBar.jsx";
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
