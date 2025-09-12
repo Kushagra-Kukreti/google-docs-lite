@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { collection, addDoc, query, where, onSnapshot, updateDoc, doc } from "firebase/firestore";
 import { useAuth } from "../context/AuthContext.jsx";
-import SideBar from "../components/SideBar.jsx"
-
+import SidebarComponent from "../components/SidebarComponent.jsx";
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const [inviteEmail, setInviteEmail] = useState("");
@@ -41,7 +40,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex h-screen">
-      <SideBar
+      <SidebarComponent
         boards={boards}
         setActiveBoard={setActiveBoard}
         addBoard={createBoard}

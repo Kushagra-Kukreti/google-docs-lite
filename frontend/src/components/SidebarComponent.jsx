@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const SideBar = ({ boards, setActiveBoard, addBoard, activeBoard }) => {
+const SidebarComponent = ({ boards, setActiveBoard, addBoard, activeBoard }) => {
   const [newBoard, setNewBoard] = useState("");
   const navigate = useNavigate();
 
@@ -52,4 +52,4 @@ const SideBar = ({ boards, setActiveBoard, addBoard, activeBoard }) => {
   );
 };
 
-export default SideBar;
+export default SidebarComponent;
