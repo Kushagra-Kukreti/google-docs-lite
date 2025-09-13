@@ -15,6 +15,7 @@ import SidebarComponent from "../components/SidebarComponent.jsx";
 import ShareModal from "../components/ShareModal.jsx";
 import { Menu, MenuItem } from "@mui/material";
 import BoardCard from "../components/BoardCard.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
@@ -23,6 +24,7 @@ export default function Dashboard() {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [selectedBoard, setSelectedBoard] = useState(null);
   const [shareOpen, setShareOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Fetch boards where user is a member
   useEffect(() => {
@@ -97,7 +99,10 @@ export default function Dashboard() {
           >
             Share
           </MenuItem>
-          <MenuItem onClick={handleMenuClose}>Edit</MenuItem>
+          <MenuItem onClick={()=>{
+            handleMenuClose();
+            navigate(`/board/${selectedBoard.id}`);
+            }}>Edit</MenuItem>
           <MenuItem
             onClick={() => {
               deleteBoard(selectedBoard.id);

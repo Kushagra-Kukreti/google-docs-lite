@@ -3,13 +3,9 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useNavigate } from "react-router-dom";
 
 export default function BoardCard({ board, onMenuOpen }) {
-  const navigate = useNavigate()
   return (
     <Card
       className="relative rounded-2xl bg-white cursor-pointer"
-      onClick={()=>{
-         navigate(`/board/${board.id}`);
-      }}
       sx={{
         border: "1px solid #eaeaea",
         transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
