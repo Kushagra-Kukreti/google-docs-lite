@@ -2,16 +2,22 @@ import { useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from "@mui/material";
 
 export default function ShareModal({ open, onClose, board, onInvite }) {
-  const [userId, setUserId] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
-    if (!open) setUserId("");
+    if (!open) setEmail("");
   }, [open]);
 
-  const handleInvite = () => {
-    if (!userId.trim()) return;
-    onInvite(board.id, userId);
-    setUserId("");
+  const handleInvite = async() => {
+    if (!email.trim()) return;
+    try {
+      // const userInfo = await getUser(email);
+      onInvite(board.id, email);
+      setEmail("");
+    } catch (error) {
+       console.log("Error in user fetching",error);
+       
+    }
   };
 
   if (!board) return null;
@@ -22,8 +28,8 @@ export default function ShareModal({ open, onClose, board, onInvite }) {
       <DialogContent>
         <TextField
           label="Enter user UID / Email"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           fullWidth
           margin="normal"
         />

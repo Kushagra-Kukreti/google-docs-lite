@@ -1,14 +1,32 @@
 import { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { listenToTasks, addTask, updateTask, deleteTask } from "../utils/firestore";
+import {
+  listenToTasks,
+  addTask,
+  updateTask,
+  deleteTask,
+  getMembersList,
+} from "../utils/firestore";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 export default function Board({ boardId }) {
   const [tasks, setTasks] = useState({ todo: [], inProgress: [], done: [] });
   const [newTask, setNewTask] = useState("");
-
+  const [accessDenied, setAccessDenied] = useState(false);
+  const navigate = useNavigate();
+  const checkPermission = async (boardId) => {
+    const response = await getMembersList(boardId);
+    if (response === "permission-denied") {
+      setAccessDenied(true);
+    }
+  };
   useEffect(() => {
-    const unsub = listenToTasks(boardId, setTasks);
-    return () => unsub();
+    checkPermission(boardId);
+    if (!accessDenied) {
+      const unsub = listenToTasks(boardId, setTasks);
+      return () => unsub();
+    }
   }, [boardId]);
 
   const onDragEnd = (result) => {
@@ -27,6 +45,45 @@ export default function Board({ boardId }) {
     setNewTask("");
   };
 
+  if (accessDenied) {
+    return (
+      <AnimatePresence>
+        {accessDenied && (
+          <motion.div
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-2xl p-6 shadow-lg w-full max-w-lg"
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 120, damping: 20 }}
+            >
+              <h2 className="text-xl font-bold mb-4">🚫 Access Denied</h2>
+              <p className="mb-4 text-gray-600">
+                You don’t have permission to view this board.
+              </p>
+              <div className="flex justify-end">
+                <button
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
+                  onClick={() => {
+                    setAccessDenied(false);
+                    navigate("/");
+                  }}
+                >
+                  Okay
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  }
+
   return (
     <div>
       <form onSubmit={handleAddTask} className="flex gap-2 mb-4">
@@ -36,7 +93,9 @@ export default function Board({ boardId }) {
           value={newTask}
           onChange={(e) => setNewTask(e.target.value)}
         />
-        <button className="bg-blue-500 text-white px-4 py-2 rounded">Add</button>
+        <button className="bg-blue-500 text-white px-4 py-2 rounded">
+          Add
+        </button>
       </form>
 
       <DragDropContext onDragEnd={onDragEnd}>
@@ -51,7 +110,11 @@ export default function Board({ boardId }) {
                 >
                   <h2 className="font-bold mb-2 capitalize">{colId}</h2>
                   {items.map((task, index) => (
-                    <Draggable key={task.id} draggableId={task.id} index={index}>
+                    <Draggable
+                      key={task.id}
+                      draggableId={task.id}
+                      index={index}
+                    >
                       {(provided) => (
                         <div
                           className="bg-white p-2 rounded shadow mb-2 flex justify-between"

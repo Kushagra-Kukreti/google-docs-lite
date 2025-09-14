@@ -46,6 +46,8 @@ export default function BoardCard({ board, onMenuOpen }) {
           <div className="mt-2">
             {board.members?.length > 0 ? (
               <AvatarGroup max={5}>
+                {console.log("board members",board.members)
+                }
                 {board.members.map((m) => (
                   <Avatar
                     key={m.uid || m}

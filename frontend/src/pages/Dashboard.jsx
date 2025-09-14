@@ -47,11 +47,11 @@ export default function Dashboard() {
     });
   };
 
-  const inviteUser = async (boardId, uid) => {
+  const inviteUser = async (boardId, userInfo) => {
     const boardRef = doc(db, "boards", boardId);
     const board = boards.find((b) => b.id === boardId);
     if (!board) return;
-    const updatedMembers = [...new Set([...board.members, uid])];
+    const updatedMembers = [...new Set([...board.members, userInfo])];
     await updateDoc(boardRef, { members: updatedMembers });
   };
 
@@ -91,14 +91,14 @@ export default function Dashboard() {
 
         {/* Menu for board options */}
         <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
-          <MenuItem
+          {/* <MenuItem
             onClick={() => {
               setShareOpen(true);
               handleMenuClose();
             }}
           >
             Share
-          </MenuItem>
+          </MenuItem> */}
           <MenuItem onClick={()=>{
             handleMenuClose();
             navigate(`/board/${selectedBoard.id}`);

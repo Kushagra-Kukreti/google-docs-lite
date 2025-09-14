@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "firebase/firestore";
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy, getDocs, getDoc } from "firebase/firestore";
 
 export const listenToTasks = (boardId, setTasks) => {
   const tasksRef = collection(db, "boards", boardId, "tasks");
@@ -14,6 +14,26 @@ export const listenToTasks = (boardId, setTasks) => {
     setTasks(data);
   });
 };
+
+export const getMembersList = async(boardId)=>{
+  try {
+    const boardRef = doc(db, "boards", boardId);
+    const boardSnap = await getDoc(boardRef);
+    return boardSnap;
+  } catch (error) {
+    return error.code
+  }
+}
+
+// export const getUser = async(email)=>{
+//     try {
+//       const userRef = doc(db,"users",email)
+//       const user = await getDoc(userRef)
+//       return user
+//     } catch (error) {
+//        console.log("error while fetching user",error.code); 
+//     }
+// }
 
 export const addTask = async (boardId, title) => {
   const tasksRef = collection(db, "boards", boardId, "tasks");
