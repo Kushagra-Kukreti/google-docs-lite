@@ -13,7 +13,7 @@ import {
 import { useAuth } from "../context/AuthContext.jsx";
 import SidebarComponent from "../components/SidebarComponent.jsx";
 import ShareModal from "../components/ShareModal.jsx";
-import { Menu, MenuItem } from "@mui/material";
+import { Menu, MenuItem, Avatar, Divider, Typography } from "@mui/material";
 import BoardCard from "../components/BoardCard.jsx";
 import { useNavigate } from "react-router-dom";
 
@@ -24,6 +24,10 @@ export default function Dashboard() {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [selectedBoard, setSelectedBoard] = useState(null);
   const [shareOpen, setShareOpen] = useState(false);
+
+  // Profile menu state
+  const [profileAnchor, setProfileAnchor] = useState(null);
+
   const navigate = useNavigate();
 
   // Fetch boards where user is a member
@@ -68,6 +72,14 @@ export default function Dashboard() {
     setMenuAnchor(null);
   };
 
+  const handleProfileOpen = (event) => {
+    setProfileAnchor(event.currentTarget);
+  };
+
+  const handleProfileClose = () => {
+    setProfileAnchor(null);
+  };
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -75,11 +87,37 @@ export default function Dashboard() {
 
       {/* Main Area */}
       <div className="flex-1 p-6">
-        <div className="flex justify-between mb-6">
+        <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Welcome {user.displayName}</h1>
-          <button onClick={logout} className="bg-red-500 px-3 py-1 text-white rounded">
-            Logout
-          </button>
+
+          {/* Profile Avatar */}
+          <div>
+            <Avatar
+              src={user.photoURL}
+              alt={user.displayName}
+              onClick={handleProfileOpen}
+              sx={{ cursor: "pointer" }}
+            />
+            <Menu
+              anchorEl={profileAnchor}
+              open={Boolean(profileAnchor)}
+              onClose={handleProfileClose}
+            >
+              <div className="px-4 py-2">
+                <Typography variant="subtitle1" className="font-bold">
+                  {user.displayName}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {user.email}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                 uid:{user.uid}
+                </Typography>
+              </div>
+              <Divider />
+              <MenuItem onClick={logout}>Logout</MenuItem>
+            </Menu>
+          </div>
         </div>
 
         {/* Boards Grid */}
@@ -91,18 +129,14 @@ export default function Dashboard() {
 
         {/* Menu for board options */}
         <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
-          {/* <MenuItem
+          <MenuItem
             onClick={() => {
-              setShareOpen(true);
               handleMenuClose();
+              navigate(`/board/${selectedBoard.id}`);
             }}
           >
-            Share
-          </MenuItem> */}
-          <MenuItem onClick={()=>{
-            handleMenuClose();
-            navigate(`/board/${selectedBoard.id}`);
-            }}>Edit</MenuItem>
+            Edit
+          </MenuItem>
           <MenuItem
             onClick={() => {
               deleteBoard(selectedBoard.id);
