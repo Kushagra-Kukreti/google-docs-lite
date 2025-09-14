@@ -129,6 +129,14 @@ export default function Dashboard() {
 
         {/* Menu for board options */}
         <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
+           <MenuItem
+            onClick={() => {
+              handleMenuClose();
+              setShareOpen(true)
+            }}
+          >
+            Share
+          </MenuItem>
           <MenuItem
             onClick={() => {
               handleMenuClose();
