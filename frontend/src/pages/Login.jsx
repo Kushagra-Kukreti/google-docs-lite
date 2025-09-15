@@ -14,7 +14,7 @@ export default function Login() {
         className="bg-white p-10 rounded-3xl shadow-xl w-full max-w-sm text-center"
       >
         <h1 className="text-3xl font-bold mb-8 text-gray-800">
-          Real-Time Todo App
+          Task Flow Real-Time Collaboration
         </h1>
 
         <p className="text-gray-500 mb-6">
